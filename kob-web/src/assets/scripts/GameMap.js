@@ -2,6 +2,7 @@ import { AcGameObject } from "./AcGameObject";
 import { Wall } from "./Wall";
 /**
  * GameMap.js文件，用于实现游戏地图（可自适应窗口、奇数）
+ * 生成地图之后放在后端，用后端生成
  * 一、定义GameMap类（继承游戏基类）
  *      0.参数ctx：canvas对象，parent：DOM对象
  *      1.初始化[ctx、parent]，单位长度L，行r列c，墙数
@@ -15,8 +16,9 @@ export class GameMap extends AcGameObject {
         this.parent = parent; // 获取GameMap组件的对应div信息
         this.L = 0;// 表示一个单位长度，用相对距离控制大小
 
+        // 行列数一奇一偶，保证初始位分别为(奇数，奇数)；(偶数，奇数)，那么蛇头一定不可能同时走到一个位置变成平局
         this.rows = 13;
-        this.cols = 13;
+        this.cols = 14; 
 
         this.inner_walls_count = 20;
         this.walls = [];
@@ -68,8 +70,11 @@ export class GameMap extends AcGameObject {
                 // 避免左上角和右上角的出生位置
                 if (r == this.rows - 2 && c == 1 || r == 1 && c == this.cols - 2)
                     continue;
-                // 对称赋值
-                g[r][c] = g[c][r] = true;
+                // #1.轴对称，适用于正方形地图
+                // g[r][c] = g[c][r] = true;
+                // #2.中心对称，适用于长方形地图
+                g[r][c] = g[this.rows - 1 - r][this.cols - 1 - c] = true;
+
                 break;
             }
         }
