@@ -34,7 +34,7 @@ public class LoginServiceImpl implements LoginService {
         User user = loginUser.getUser();
         String jwt = JwtUtil.createJWT(user.getId().toString()); // JWT（）
         Map<String, String> map = new HashMap<>();
-        map.put("success_msg", "success");
+        map.put("error_message", "success");
         map.put("token", jwt); // 此处自定义名称，只要和前端取名对应起来
         System.out.println(map);
         return map;

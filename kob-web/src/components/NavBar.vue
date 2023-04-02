@@ -43,7 +43,7 @@
                         </router-link>
                     </li>
                     <li class="nav-item ">
-                        <router-link class="nav-link" :to="{name: 'user_account_login'}" role="button">
+                        <router-link class="nav-link" :to="{name: 'user_account_register'}" role="button">
                             注册
                         </router-link>
                     </li>

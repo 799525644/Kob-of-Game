@@ -11,7 +11,7 @@
                         <label for="password" class="form-label">密码</label>
                         <input v-model="password" type="password" class="form-control" id="password" placeholder="请输入密码">
                     </div>
-                    <div class="login-msg">{{ success_msg }}</div>
+                    <div class="error-message">{{ error_message }}</div>
                     <button type="submit" class="btn btn-primary">提交</button>
                 </form>
             </div>
@@ -34,10 +34,10 @@ export default{
         const store = useStore();
         let username = ref('');
         let password = ref('');
-        let success_msg = ref('');
+        let error_message = ref('');
 
         const login = () =>{
-            success_msg.value = "";
+            error_message.value = "";
             // 调用store中的login方法，{}中可以理解为传参
             store.dispatch("login",{
                 username: username.value,
@@ -48,19 +48,19 @@ export default{
                             router.push({ name: 'home'})
                         },
                         error(){
-                            success_msg.value = "用户信息读取失败" 
+                            error_message.value = "用户信息读取失败" 
                         }
                     })
                 },
                 error(){
-                    success_msg.value = "用户名或密码错误" 
+                    error_message.value = "用户名或密码错误" 
                 }
             })
         }
         return { // 暴露的属性或方法
             username,
             password,
-            success_msg,
+            error_message,
             login,
         }
     }

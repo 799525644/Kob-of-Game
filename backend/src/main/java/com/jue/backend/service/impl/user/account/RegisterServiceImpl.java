@@ -70,7 +70,7 @@ public class RegisterServiceImpl implements RegisterService {
             return map;
         }
 
-        // 没问题则将密码加密。存到数据库中
+        // 最后，如果没问题则将密码加密。存到数据库中
         String encodedPassword = passwordEncoder.encode(password);
         String photo = "https://cdn.acwing.com/media/user/profile/photo/1_lg_844c66b332.jpg";
         // id自增，设置为null即可

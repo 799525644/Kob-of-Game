@@ -15,25 +15,6 @@ export default{
   },
   // 获取token，一般用post，url、type➕data
   setup(){
-
-
-    // 注册，一般用post，url、type➕data
-    // $.ajax({
-    //   url:"http://127.0.0.1:3000/user/account/register/",
-    //   type:"post",
-    //   data:{
-    //     username:"jue",
-    //     password:"pjue",
-    //     confirmedPassword:"pjue"
-    //   },
-    //   success(resp){
-    //      console.log(resp);
-    //   },
-    //   error(resp){
-    //     console.log(resp);
-    //   }
-    // })
-
   }
 
 }

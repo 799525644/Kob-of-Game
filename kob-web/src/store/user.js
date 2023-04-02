@@ -37,7 +37,8 @@ export default{
                   password: data.password,
                 },
                 success(resp){ // resp为后端返回的结果
-                    if(resp.success_msg === "success"){
+                    console.log("login_resp:",resp)
+                    if(resp.error_message === "success"){
                         console.log("符合")
                         context.commit("updateToken", resp.token);
                         data.success(resp)
@@ -47,6 +48,7 @@ export default{
                     }
                 },
                 error(resp){
+                    console.log("login_resp:",resp)
                     data.error(resp)
                 }
               });
@@ -60,7 +62,7 @@ export default{
                     Authorization: "Bearer " + context.state.token, // 授权
                 },
                 success(resp){
-                    if(resp.success_msg === "success"){
+                    if(resp.error_message === "success"){
                         context.commit("updateUser",{
                             ...resp, // 将resp解构
                             is_login: true,
@@ -71,7 +73,7 @@ export default{
                     }
                 },
                 error(resp){
-                    console.log("resp_error",resp)
+                    console.log("error_message",resp)
                     data.error(resp)
                 }
             })
