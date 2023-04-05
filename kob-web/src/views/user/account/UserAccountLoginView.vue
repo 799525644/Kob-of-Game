@@ -1,5 +1,5 @@
 <template>
-    <ContentField>
+    <ContentField v-if="!$store.state.user.pulling_info">
         <div class="row justify-content-md-center">
             <div class="col-3">
                 <form @submit.prevent="login">
@@ -36,6 +36,23 @@ export default{
         let password = ref('');
         let error_message = ref('');
 
+        const jwt_token = localStorage.getItem("jwt_token");
+        if(jwt_token){
+            store.commit("updateToken",jwt_token)
+            store.dispatch("getinfo",{
+                success(){
+                    router.push({name:"home"});
+                    store.commit("updatePullingInfo",false);
+                },
+                error(){
+                    store.commit("updatePullingInfo",false);
+                }
+            });
+        }else{
+            store.commit("updatePullingInfo",false);
+
+        }
+
         const login = () =>{
             error_message.value = "";
             // 调用store中的login方法，{}中可以理解为传参
@@ -45,7 +62,7 @@ export default{
                 success(){
                     store.dispatch("getinfo",{ // 组件调用store的getinfo函数
                         success(){
-                            router.push({ name: 'home'})
+                            router.push({ name: "home"})
                         },
                         error(){
                             error_message.value = "用户信息读取失败" 
@@ -62,6 +79,7 @@ export default{
             password,
             error_message,
             login,
+            
         }
     }
 }
