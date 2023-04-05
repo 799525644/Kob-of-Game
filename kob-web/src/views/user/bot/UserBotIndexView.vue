@@ -1,7 +1,5 @@
 <template>
-    <div class="container">
-        <ContentField></ContentField>
-    </div>
+    <ContentField>我的机器人</ContentField>
 </template>
 
 <script>
