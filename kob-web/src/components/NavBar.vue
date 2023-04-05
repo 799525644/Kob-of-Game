@@ -7,6 +7,7 @@
             <router-link class="navbar-brand" :to= "{name: 'home'}">King of Bot</router-link>
             <!-- 导航内容 -->
             <div class="collapse navbar-collapse" id="navbarText">
+                <!-- 导航前部分 -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <!-- <a class="nav-link" aria-current="page" href="/pk/">对战</a> -->
@@ -21,6 +22,7 @@
                         <router-link :class="route_name == 'ranklist_index' ? 'nav-link active':'nav-link'" :to= "{name: 'ranklist_index'}">排行榜</router-link>
                     </li>
                 </ul>
+                <!-- 导航后部分，用户下拉模块，用户登录时显示" -->
                 <ul class="navbar-nav" v-if="$store.state.user.is_login">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -36,7 +38,8 @@
                         </ul>
                     </li>
                 </ul>
-                <ul class="navbar-nav" v-else-if="!$store.state.user.pulling_info">
+                <!-- 导航后部分，登录/注册，用户未登录时显示 -->
+                <ul class="navbar-nav" v-else>
                     <li class="nav-item">
                         <router-link class="nav-link" :to="{name: 'user_account_login'}" role="button">
                             登陆
