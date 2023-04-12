@@ -321,7 +321,7 @@ export default {
                 success(resp){
                     console.log("update_bot_resp:",resp);
                     if(resp.error_message === "success"){
-                        Modal.getInstance(`#update-bot-btn`+bot.id).hide();
+                        Modal.getInstance(`#update-bot-modal-`+bot.id).hide();
                         refresh_bots();
                     }else{
                         bot.error_message = resp.error_message;
