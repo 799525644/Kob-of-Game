@@ -12,7 +12,7 @@
 
 <script>
 import { GameMap } from '@/assets/scripts/GameMap';
-import { ref, onMounted } from 'vue' // ref用于vue的脚本中定义变量，onMounted用于vue生命周期的挂载时期
+import { ref, onMounted } from 'vue' // 定义ref变量，onMounted用于vue生命周期的挂载时期
 export default {
     // setup的一般函数写法可以用this，箭头函数写法没有this，回向上层指
     setup() {

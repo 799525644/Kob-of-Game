@@ -47,10 +47,10 @@ export default{
                   password: data.password,
                 },
                 success(resp){ // resp为后端返回的结果
+                    console.log("user_login_resp:",resp);
                     context.commit("updateToken", resp.token);
                     localStorage.setItem("jwt_token",resp.token);
                     if(resp.error_message === "success"){
-                        console.log("login success")
                         data.success(resp)
                     }
                     else {
@@ -58,7 +58,7 @@ export default{
                     }
                 },
                 error(resp){
-                    console.log("login_resp:",resp)
+                    console.log("user_login_resp:",resp);
                     data.error(resp)
                 }
               });

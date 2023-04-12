@@ -25,7 +25,6 @@ import {useStore} from 'vuex'
 import {ref} from 'vue'
 import router from '../../../router/index'
 
-
 export default{
     components:{
         ContentField
@@ -84,10 +83,9 @@ export default{
 }
 </script>
 
-
-<style>
+<style scoped>
 button{
-    width: 100%;
+    width: 50%;
 }
 div.login-msg{
     color:red;
