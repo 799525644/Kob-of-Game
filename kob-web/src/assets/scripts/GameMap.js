@@ -11,11 +11,12 @@ import { Snake } from "./Snake"
  */
 
 export class GameMap extends AcGameObject {
-    constructor(ctx, parent) {
+    constructor(ctx, parent, store) {
         super();
 
         this.ctx = ctx;
         this.parent = parent; // 获取GameMap组件的对应div信息
+        this.store = store;
         this.L = 0;// 表示一个单位长度，用相对距离控制大小
 
         // 行列数一奇一偶，保证初始位分别为(奇数，奇数)；(偶数，奇数)，那么蛇头一定不可能同时走到一个位置变成平局
@@ -32,65 +33,67 @@ export class GameMap extends AcGameObject {
 
     }
 
-    // PART1:dfs算法判断连通性
-    check_connectivity(g, sx, sy, tx, ty) {
-        if (sx == tx && sy == ty) return true;
-        g[sx][sy] = true;
+    // #1 PART1:dfs算法判断连通性（转移到后端）
+    // check_connectivity(g, sx, sy, tx, ty) {
+    //     if (sx == tx && sy == ty) return true;
+    //     g[sx][sy] = true;
 
-        let dx = [-1, 0, 1, 0], dy = [0, 1, 0, -1]; // 定义上下左右的偏移量
-        for (let i = 0; i < 4; i ++) {
-            let x = sx + dx[i], y = sy + dy[i];
-            if (!g[x][y] && this.check_connectivity(g, x, y, tx, ty))
-                return true;
-        }
+    //     let dx = [-1, 0, 1, 0], dy = [0, 1, 0, -1]; // 定义上下左右的偏移量
+    //     for (let i = 0; i < 4; i ++) {
+    //         let x = sx + dx[i], y = sy + dy[i];
+    //         if (!g[x][y] && this.check_connectivity(g, x, y, tx, ty))
+    //             return true;
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
     //PART1:创建障碍物
     create_walls() {
-        // 0. 测试用
+        const g = this.store.state.pk.gamemap;
+        // // #1 前端生成地图
+        // // 0. 测试用
         // new Wall(0, 0, this); 
-        // 1.四周、随机加上障碍物
-        // 用数组先模拟障碍物，初始化障碍物数组
-        const g = [];
-        for (let r = 0; r < this.rows; r ++) {
-            g[r] = [];
-            for (let c = 0; c < this.cols; c ++) {
-                g[r][c] = false;
-            }
-        }
-        // 四周加上障碍物
-        for (let r = 0; r < this.rows; r ++ ) {
-            g[r][0] = g[r][this.cols - 1] = true;
-        }
+        // // 1.四周、随机加上障碍物
+        // // 用数组先模拟障碍物，初始化障碍物数组
+        // const g = [];
+        // for (let r = 0; r < this.rows; r ++) {
+        //     g[r] = [];
+        //     for (let c = 0; c < this.cols; c ++) {
+        //         g[r][c] = false;
+        //     }
+        // }
+        // // 四周加上障碍物
+        // for (let r = 0; r < this.rows; r ++ ) {
+        //     g[r][0] = g[r][this.cols - 1] = true;
+        // }
 
-        for (let c = 0; c < this.cols; c ++)  {
-            g[0][c] = g[this.rows - 1][c] = true;
-        }
+        // for (let c = 0; c < this.cols; c ++)  {
+        //     g[0][c] = g[this.rows - 1][c] = true;
+        // }
 
         // 随机创建轴对称障碍物；（避免重复暴力找空位来随机）
-        for (let i = 0; i < this.inner_walls_count / 2; i++) {
-            for (let j = 0; j < 1000; j++) {
-                // random返回0-1，×数能得到0～数-1之间的值
-                let r = parseInt(Math.random() * this.rows);
-                let c = parseInt(Math.random() * this.cols);
-                // 如果已经设墙，则跳过
-                if (g[r][c] || g[this.rows - 1 - r][this.cols - 1 - c]) continue;
-                // 避免左上角和右上角的出生位置
-                if (r == this.rows - 2 && c == 1 || r == 1 && c == this.cols - 2)
-                    continue;
-                // #1.轴对称，适用于正方形地图
-                // g[r][c] = g[c][r] = true;
-                // #2.中心对称，适用于长方形地图
-                g[r][c] = g[this.rows - 1 - r][this.cols - 1 - c] = true;
-                break;
-            }
-        }
+        // for (let i = 0; i < this.inner_walls_count / 2; i++) {
+        //     for (let j = 0; j < 1000; j++) {
+        //         // random返回0-1，×数能得到0～数-1之间的值
+        //         let r = parseInt(Math.random() * this.rows);
+        //         let c = parseInt(Math.random() * this.cols);
+        //         // 如果已经设墙，则跳过
+        //         if (g[r][c] || g[this.rows - 1 - r][this.cols - 1 - c]) continue;
+        //         // 避免左上角和右上角的出生位置
+        //         if (r == this.rows - 2 && c == 1 || r == 1 && c == this.cols - 2)
+        //             continue;
+        //         // #1.轴对称，适用于正方形地图
+        //         // g[r][c] = g[c][r] = true;
+        //         // #2.中心对称，适用于长方形地图
+        //         g[r][c] = g[this.rows - 1 - r][this.cols - 1 - c] = true;
+        //         break;
+        //     }
+        // }
 
         // 如果不连通return false   
-        const copy_g = JSON.parse(JSON.stringify(g));
-        if (!this.check_connectivity(copy_g, this.rows - 2, 1, 1, this.cols - 2))
-            return false;
+        // const copy_g = JSON.parse(JSON.stringify(g));
+        // if (!this.check_connectivity(copy_g, this.rows - 2, 1, 1, this.cols - 2))
+        //     return false;
 
         // 绘制障碍物
         for (let r = 0; r < this.rows; r++) {
@@ -100,7 +103,7 @@ export class GameMap extends AcGameObject {
                 }
             }
         }
-        return true;
+        // return true;
     }
     
     // PART2:添加键盘移动监听事件(注意浏览器插件的快捷键冲突)
@@ -123,9 +126,11 @@ export class GameMap extends AcGameObject {
 
     // PART1:循环执行障碍物生成，直到连通判定成功; PART2:执行键盘监听
     start() {
-        for (let i = 0; i < 1000; i++)
-            if (this.create_walls())
-                break;
+        // #1 循环1000次
+        // for (let i = 0; i < 1000; i++)
+        //     if (this.create_walls())
+        //         break;
+        this.create_walls();
         this.add_listening_events();
     }
     // PART1:更新地图大小

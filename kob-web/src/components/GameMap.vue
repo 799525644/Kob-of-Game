@@ -13,17 +13,22 @@
 <script>
 import { GameMap } from '@/assets/scripts/GameMap';
 import { ref, onMounted } from 'vue' // 定义ref变量，onMounted用于vue生命周期的挂载时期
+import { useStore } from 'vuex';
 export default {
     // setup的一般函数写法可以用this，箭头函数写法没有this，回向上层指
     setup() {
         let parent = ref(null);
         let canvas = ref(null);
+        const store = useStore();
 
         onMounted(()=>{ // 组件挂载后，创建GameMap对象；取vue中的变量需要.value
             // vue的传值
             // canvas.value.getContext('2d')即传入了canvas.getContext('2d')，一个 2D 画布的渲染上下文
             // parent.value即传入parent也就是gamemap的div信息
-            new GameMap(canvas.value.getContext('2d'), parent.value)
+            // #1 前端生成
+            // new GameMap(canvas.value.getContext('2d'), parent.value)
+            // #2 传入vuex的store生产生成地图
+            new GameMap(canvas.value.getContext('2d'), parent.value, store)
         });
         return{ // 返回后才能在 template中使用变量
             parent,

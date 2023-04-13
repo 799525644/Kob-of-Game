@@ -226,8 +226,6 @@ export default {
                 fontSize: 16
             }
         });
-
-
         const botaddmsg = reactive({
             title:"",
             description:"",
@@ -303,6 +301,7 @@ export default {
                 
             })
         }
+        
         // 修改bot
         const update_bot = (bot) => {
             bot.error_message = "";
