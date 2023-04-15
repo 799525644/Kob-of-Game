@@ -1,7 +1,5 @@
 <!-- 
-    PK模块
-        背景PlayGround
-            ->>游戏面板GameMap
+  PK模块->背景PlayGround->**游戏面板GameMap|匹配面板MatchGround
 -->
 <template>
     <!-- vue的变量绑定使用ref -->
@@ -22,14 +20,14 @@ export default {
         const store = useStore();
 
         onMounted(()=>{ // 组件挂载后，创建GameMap对象；取vue中的变量需要.value
-            // vue的传值
-            // canvas.value.getContext('2d')即传入了canvas.getContext('2d')，一个 2D 画布的渲染上下文
-            // parent.value即传入parent也就是gamemap的div信息
-            // #1 前端生成
-            // new GameMap(canvas.value.getContext('2d'), parent.value)
-            // #2 传入vuex的store生产生成地图
-            new GameMap(canvas.value.getContext('2d'), parent.value, store)
-        });
+            store.commit(
+                "updateGameObject",
+                new GameMap(
+                    canvas.value.getContext('2d'),
+                    parent.value, 
+                    store)
+                );
+            });
         return{ // 返回后才能在 template中使用变量
             parent,
             canvas
