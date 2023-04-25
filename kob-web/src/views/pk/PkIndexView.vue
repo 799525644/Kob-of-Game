@@ -36,7 +36,7 @@ export default {
         // 赋值socket，及其函数onopen、onmessage（不同后端的框架定义方式不同如onmessage的msg）
         socket = new WebSocket(socketUrl);
         socket.onopen = () =>{
-          console.log("connected!");
+          console.log("socket connected!");
           store.commit("updateSocket", socket);
         }
         socket.onmessage = msg =>{
@@ -71,7 +71,6 @@ export default {
             store.commit("updateLoser", data.loser);
           }
         }
-
         socket.onclose = () =>{
           console.log("disconnected!");
         }

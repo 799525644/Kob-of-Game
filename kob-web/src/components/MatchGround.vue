@@ -39,18 +39,20 @@ export default {
         const click_match_btn = () => {
             if (match_btn_info.value === "开始匹配") {
                 console.log("send event: start-matching")
-                match_btn_info.value = "取消";
                 // ws通信：socket.send表示向后端发送JSON数据，发起开始匹配请求
                 store.state.pk.socket.send(JSON.stringify({
                     event: "start-matching",
                 }));
+                match_btn_info.value = "取消";
+
             } else {
                 console.log("send event: stop-matching")
-                match_btn_info.value = "开始匹配";
                 // ws通信：socket.send表示向后端发送JSON数据，发起取消匹配请求
                 store.state.pk.socket.send(JSON.stringify({
                     event: "stop-matching",
                 }));
+                match_btn_info.value = "开始匹配";
+
             }
         }
 
