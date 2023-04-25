@@ -33,6 +33,15 @@ public class MatchingPool extends Thread{
     public void addPlayer(Integer userId, Integer rating){
         lock.lock();
         try{
+            // 重连刷新
+            for(Player player:players){
+                if(player.getUserId().equals(userId)){
+                    System.out.println("存在重复id");
+                    removePlayer(userId);
+                    break;
+                }
+            }
+            System.out.println("user"+userId+"进入匹配");
             players.add(new Player(userId, rating, 0));
         }finally {
             lock.unlock();
@@ -44,7 +53,7 @@ public class MatchingPool extends Thread{
         try{
             List<Player> newPlayers = new ArrayList<>(); // 创建一个新的列表，将没有删的存在下来
             for(Player player:players){
-                if(!player.getUserId().equals(userId)){
+                if(!player.getUserId().equals(userId)){ // 将该玩家之外的玩家加入
                     newPlayers.add(player);
                 }
             }
