@@ -41,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/user/account/token/", "/user/account/register/").permitAll() // 很明显这一步时设置公开页面的
-                .antMatchers("/pk/start/game/").hasIpAddress("127.0.0.1") // 只允许服务本地主机调用
+                .antMatchers("/pk/start/game/","/pk/receive/bot/move/").hasIpAddress("127.0.0.1") // 只允许服务本地主机调用
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated();
 

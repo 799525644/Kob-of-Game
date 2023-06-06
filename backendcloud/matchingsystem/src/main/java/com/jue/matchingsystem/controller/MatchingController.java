@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Objects;
 
 /**
- * @className: backendcloud.com.jue.matchingsystem.controller.MatchingController.java
+ * @className: com.jue.matchingsystem.controller.MatchingController.java\
  * @description:
  * @author: Juemuel
  * @createTime: 2023/4/16
@@ -25,7 +25,8 @@ public class MatchingController {
         System.out.println("matching: /player/add/");
         Integer userId = Integer.parseInt(Objects.requireNonNull(data.getFirst("user_id")));
         Integer rating = Integer.parseInt(Objects.requireNonNull(data.getFirst("rating")));
-        return matchingService.addPlayer(userId, rating);
+        Integer botId = Integer.parseInt(Objects.requireNonNull(data.getFirst("bot_id")));
+        return matchingService.addPlayer(userId, rating, botId);
     }
 
     @PostMapping("/player/remove/")

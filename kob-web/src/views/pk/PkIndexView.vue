@@ -23,8 +23,10 @@ export default {
     setup(){
       const store = useStore();
       // 自定义ws变量socket
-      let socket = null;
       const socketUrl = `ws://127.0.0.1:3001/websocket/${store.state.user.token}/`; // ws协议格式，注意当字符串中有模版字符串，需要用反引号，是 ` 不是 '
+      store.commit("updateLoser", "none");
+      
+      let socket = null;
 
 
       // 当前组件onMounted时，显示占位的对手的名称和头像
@@ -50,7 +52,7 @@ export default {
             // 延迟后跳转到playing某个页面
             setTimeout(()=>{
               store.commit("updateStatus", "playing");
-            },1000);
+            },200);
             store.commit("updateGame", data.game); // 更新game数据
           }else if(data.event === "move"){ 
             console.log("move received:"+data);

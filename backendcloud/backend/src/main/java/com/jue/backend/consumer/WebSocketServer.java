@@ -3,8 +3,10 @@ package com.jue.backend.consumer;
 import com.alibaba.fastjson.JSONObject;
 import com.jue.backend.consumer.utils.Game;
 import com.jue.backend.consumer.utils.JwtAuthentication;
+import com.jue.backend.mapper.BotMapper;
 import com.jue.backend.mapper.RecordMapper;
 import com.jue.backend.mapper.UserMapper;
+import com.jue.backend.pojo.Bot;
 import com.jue.backend.pojo.Record;
 import com.jue.backend.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,13 +43,14 @@ public class WebSocketServer {
     private User user;
     private Session session = null;
     // 在这边 不能直接注入@Autowired
-    private static UserMapper userMapper;
+    public static UserMapper userMapper;
     public static RecordMapper recordMapper;
-    private Game game = null;
+    public static BotMapper botMapper;
+    public Game game = null;
     //TODO 把下面的URL写到配置文件中去
     private final static String addPlayerUrl = "http://127.0.0.1:4001/player/add/";
     private final static String removePlayerUrl = "http://127.0.0.1:4001/player/remove/";
-    private static RestTemplate restTemplate; // 用于两个进程之间通信
+    public static RestTemplate restTemplate; // 用于两个进程之间通，外面也需要借Websocket打restTemplate，故用public
     @Autowired
     public void setUserMapper(UserMapper userMapper) {
         WebSocketServer.userMapper = userMapper;
@@ -55,6 +58,10 @@ public class WebSocketServer {
     @Autowired
     public void setRecordMapper(RecordMapper recordMapper) {
         WebSocketServer.recordMapper = recordMapper;
+    }
+    @Autowired
+    public void setBotMapper(BotMapper botMapper) {
+        WebSocketServer.botMapper = botMapper;
     }
     @Autowired
     public void setRestTemplate(RestTemplate restTemplate){
@@ -120,7 +127,7 @@ public class WebSocketServer {
         System.out.println("receive message! in onMessage"+data);
         String event = data.getString("event");
         if ("start-matching".equals(event)) {
-            startMatching();
+            startMatching(data.getInteger("bot_id"));
         } else if ("stop-matching".equals(event)) {
             stopMatching();
         }else if("move".equals(event)){
@@ -152,12 +159,21 @@ public class WebSocketServer {
      * @Param: [aId, bId]
      * @Return: void
      */
-    public static void startGame(Integer aId, Integer bId){
+    public static void startGame(Integer aId,Integer aBotId, Integer bId, Integer bBotId){
         User a = userMapper.selectById(aId);
         User b = userMapper.selectById(bId);
+        Bot botA = botMapper.selectById(aBotId), botB = botMapper.selectById(bBotId);
 
         // #1 暂时先用局部变量、不存储到连接中
-        Game game = new Game(13, 14, 20, a.getId(), b.getId());
+        Game game = new Game(
+                13,
+                14,
+                20,
+                a.getId(),
+                botA,
+                b.getId(),
+                botB
+        );
         game.createMap();
         game.start(); // 另起一个线程
         // 注意：要考虑到玩家不存在，意外退出的情况，因此要判空
@@ -209,12 +225,13 @@ public class WebSocketServer {
      * @Param: []
      * @Return: void
      */
-    private void startMatching() {
+    private void startMatching(Integer botId) {
         System.out.println("start matching!");
         // 注意ws中的map相当于缓存，需要注意一致性问题！
         MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
         data.add("user_id",this.user.getId().toString());
         data.add("rating",this.user.getRating().toString());
+        data.add("bot_id",botId.toString());
         restTemplate.postForObject(addPlayerUrl,data,String.class);//String.class是java反射机制
 
     }
@@ -240,6 +257,7 @@ public class WebSocketServer {
     /**
      * Method: move
      * @Description: move中，先判断是蛇A还是蛇B的行为，再做下一步操作；EXP：写代码要保守一些多做严谨的判断避免bug
+     * 补充：如果是人的操作才...Bot则屏蔽掉
      * @Author: Juemuel
      * @CreateTime: 2023/4/15
      * @Param: [direction]
@@ -247,9 +265,11 @@ public class WebSocketServer {
      */
     private void move(int direction){
         if(game.getPlayerA().getId().equals(user.getId())){
-            game.setNextStepA(direction);
+            if(game.getPlayerA().getBotId().equals(-1))
+                game.setNextStepA(direction);
         }else if(game.getPlayerB().getId().equals(user.getId())){
-            game.setNextStepB(direction);
+            if(game.getPlayerB().getBotId().equals(-1))
+                game.setNextStepB(direction);
         }
     }
 

@@ -12,6 +12,8 @@ import java.util.List;
 @NoArgsConstructor // 表示无參构造函数
 public class Player {
     private Integer id; // id
+    private Integer botId; // -1表示亲自出马，否则表示用AI打
+    private String botCode;
     private Integer sx; // 横坐标
     private Integer sy; // 纵坐标
     private List<Integer> steps;
