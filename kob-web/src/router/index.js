@@ -5,6 +5,7 @@ import RecordIndexView from "@/views/record/RecordIndexView"
 import RanklistIndexView from "@/views/ranklist/RanklistIndexView"
 import UserBotIndexView from "@/views/user/bot/UserBotIndexView"
 import NotFund from "@/views/error/NotFound"
+import RecordContentView from '../views/record/RecordContentView'
 
 import UserAccountLoginView  from '@/views/user/account/UserAccountLoginView'
 import UserAccountRegisterView  from '@/views/user/account/UserAccountRegisterView'
@@ -50,6 +51,14 @@ const routes = [
     meta:{
       requestAuth: true,
     },
+  },
+  {
+    path: "/record/:recordId/",
+    name: "record_content",
+    component: RecordContentView,
+    meta: {
+      requestAuth: true,
+    }
   },
   { // ranklist_index
     path: "/ranklist/",
