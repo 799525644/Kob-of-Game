@@ -40,6 +40,7 @@ public class GetRecordListServiceImpl implements GetRecordListService {
         List<Record> records = recordMapper.selectPage(recordIPage,queryWrapper).getRecords();
         JSONObject resp = new JSONObject();
         List<JSONObject> items = new LinkedList<>();
+        // 封装一下返回内容
         for(Record record:records){
             User userA = userMapper.selectById(record.getAId());
             User userB = userMapper.selectById(record.getBId());
@@ -48,6 +49,10 @@ public class GetRecordListServiceImpl implements GetRecordListService {
             item.put("a_username",userA.getUsername());
             item.put("b_photo",userB.getPhoto());
             item.put("b_username",userB.getUsername());
+            String result = "平局";
+            if("A".equals(record.getLoser())) result = "B胜";
+            else if("B".equals(record.getLoser())) result = "A胜";
+            item.put("result",result);
             item.put("record",record);
             items.add(item);
         }

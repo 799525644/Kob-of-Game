@@ -31,6 +31,7 @@ export class GameMap extends AcGameObject {
         ];
     }
 
+    // 一、墙体
     create_walls() {
         console.log("create Wall!")
         const g = this.store.state.pk.gamemap;
@@ -44,27 +45,57 @@ export class GameMap extends AcGameObject {
         }
     }
     
-    // PART2:添加键盘移动监听事件(注意浏览器插件的快捷键冲突)
+    // 二、蛇体移动
+    // 1# 记录复现
+    // 2# 键盘移动监听事件(注意浏览器插件的快捷键冲突)
     add_listening_events(){
         console.log("listener~")
-        this.ctx.canvas.focus();
-
-        this.ctx.canvas.addEventListener("keydown",e => {
-            let d = -1;
-            if (e.key === 'w'|| e.key === `W`) d = 0;
-            else if (e.key === 'd' || e.key ===`D`) d = 1;
-            else if (e.key === 's'|| e.key ===`S`) d = 2;
-            else if (e.key === 'a'|| e.key ===`A`) d = 3;
-            // 如果是合法的移动操作，
-            if (d >= 0) {
-                // 把JSON变成字符串发过去，event名称，方向标识
-                console.log("send key:"+d)
-                this.store.state.pk.socket.send(JSON.stringify({
-                    event: "move",
-                    direction: d,
-                }));
-            }
-        });
+        if(this.store.state.record.is_record){
+            let k = 0;
+            console.log(this.store.state.record);
+            const a_steps = this.store.state.record.a_steps;
+            const b_steps = this.store.state.record.b_steps;
+            const loser = this.store.state.record.record_loser;// 区分loser，使用record_loser
+            console.log(loser);
+            const [snake0,snake1] = this.snakes;
+            const interval_id = setInterval(()=>{
+                // 最后一步
+                if(k >= a_steps.length-1) {
+                    console.log("loser end:", loser);
+                    if(loser === "all" || loser === "A"){
+                        snake0.status = "die";
+                        console.log("A die!");
+                    }
+                    if(loser === "all" || loser === "B"){
+                        snake1.status = "die";
+                        console.log("B die!");
+                    }
+                    clearInterval(interval_id);
+                }else{
+                    snake0.set_direction(parseInt(a_steps[k]));
+                    snake1.set_direction(parseInt(b_steps[k]));
+                }
+                k++;
+            },300);
+        }else{
+            this.ctx.canvas.focus();
+            this.ctx.canvas.addEventListener("keydown",e => {
+                let d = -1;
+                if (e.key === 'w'|| e.key === `W`) d = 0;
+                else if (e.key === 'd' || e.key ===`D`) d = 1;
+                else if (e.key === 's'|| e.key ===`S`) d = 2;
+                else if (e.key === 'a'|| e.key ===`A`) d = 3;
+                // 如果是合法的移动操作，
+                if (d >= 0) {
+                    // 把JSON变成字符串发过去，event名称，方向标识
+                    console.log("send key:"+d)
+                    this.store.state.pk.socket.send(JSON.stringify({
+                        event: "move",
+                        direction: d,
+                    }));
+                }
+            });
+        }
     }
 
     start() {

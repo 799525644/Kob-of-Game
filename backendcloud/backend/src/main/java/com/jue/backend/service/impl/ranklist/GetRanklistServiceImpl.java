@@ -30,6 +30,7 @@ public class GetRanklistServiceImpl implements GetRanklistService {
         queryWrapper.orderByDesc("rating");
         List<User> users = userMapper.selectPage(userIPage, queryWrapper).getRecords();
         JSONObject resp = new JSONObject();
+//      // 包含密码，故先清空一下
         for (User user: users)
             user.setPassword("");
         resp.put("users", users);

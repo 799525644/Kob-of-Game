@@ -53,7 +53,7 @@ const routes = [
     },
   },
   {
-    path: "/record/:recordId/",
+    path: "/record/:recordId/", // 在路由中使用参数的写法
     name: "record_content",
     component: RecordContentView,
     meta: {

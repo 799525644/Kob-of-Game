@@ -1,6 +1,6 @@
 <template>
     <ContentField>
-        对局列表
+        <!-- 居中好看一些 -->
         <table class="table table-striped table-hover" style="text-align: center;">
             <thead>
                 <tr>
@@ -23,6 +23,7 @@
                         &nbsp;
                         <span class="record-user-username">{{ record.b_username }}</span>
                     </td>
+                    <!-- 结果和时间 -->
                     <td>{{ record.result }}</td>
                     <td>{{ record.record.createtime }}</td>
                     <td>
@@ -32,6 +33,7 @@
             </tbody>
         </table>
         <nav aria-label="...">
+        <!-- EXP：BootStrap pagination组件 -->
         <ul class="pagination" style="float: right;">
             <li class="page-item" @click="click_page(-2)">
                 <a class="page-link" href="#">前一页</a>
@@ -65,16 +67,9 @@ export default{
         let total_records = 0;
         let pages = ref([]);
 
-        const click_page = page => {
-            if (page === -2) page = current_page - 1;
-            else if (page === -1) page = current_page + 1;
-            let max_pages = parseInt(Math.ceil(total_records / 10));
 
-            if (page >= 1 && page <= max_pages) {
-                pull_page(page);
-            }
-        }
-
+        // 一、拉取、初始化更新分页
+        // update
         const udpate_pages = () => {
             let max_pages = parseInt(Math.ceil(total_records / 10));
             let new_pages = [];
@@ -88,7 +83,7 @@ export default{
             }
             pages.value = new_pages;
         }
-
+        // pull
         const pull_page = page => {
             current_page = page;
             $.ajax({
@@ -110,9 +105,21 @@ export default{
                 }
             })
         }
-
+        // 初始化
         pull_page(current_page);
 
+        // 二、点击页码、上一页、后一页，改变page
+        const click_page = page => {
+            if (page === -2) page = current_page - 1;
+            else if (page === -1) page = current_page + 1;
+            let max_pages = parseInt(Math.ceil(total_records / 10));
+            if (page >= 1 && page <= max_pages) {
+                pull_page(page);
+            }
+        }
+
+        
+        // 字符串转2维
         const stringTo2D = map => {
             let g = [];
             for (let i = 0, k = 0; i < 13; i ++ ) {
@@ -126,9 +133,12 @@ export default{
             return g;
         }
 
+        //打开记录列表的某个记录：TODO: 此处可以写一个二分查找
         const open_record_content = recordId => {
             for (const record of records.value) {
                 if (record.record.id === recordId) {
+                    console.log("record:",record.record)
+                    // Exp：Vuex commit 关于记录回放
                     store.commit("updateIsRecord", true);
                     store.commit("updateGame", {
                         map: stringTo2D(record.record.map),
@@ -144,10 +154,11 @@ export default{
                         b_steps: record.record.bsteps,
                     });
                     store.commit("updateRecordLoser", record.record.loser);
-                    router.push({
+                    // Exp：Vue 路由跳转
+                    router.push({ 
                         name: "record_content",
                         params: {
-                            recordId
+                            recordId // 当key和value一致时，可以简写
                         }
                     })
                     break;

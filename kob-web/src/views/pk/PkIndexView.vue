@@ -1,5 +1,6 @@
 <!-- 
   **PK模块->背景PlayGround->游戏面板GameMap|匹配面板MatchGround
+  用ws控制PK页面的整体逻辑：start-matching、move、result等
 -->
 <template lang="">
     <PlayGround v-if="$store.state.pk.status === 'playing'" />
@@ -70,7 +71,6 @@ export default {
             if (data.loser === "all" || data.loser === "B") {
                 snake1.status = "die";
             }
-            store.commit("updateLoser", data.loser);
           }
         }
         socket.onclose = () =>{

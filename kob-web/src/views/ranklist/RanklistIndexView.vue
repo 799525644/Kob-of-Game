@@ -1,7 +1,6 @@
 <template>
     <ContentField>
         <ContentField>
-        排行榜
         <table class="table table-striped table-hover" style="text-align: center;">
             <thead>
                 <tr>
