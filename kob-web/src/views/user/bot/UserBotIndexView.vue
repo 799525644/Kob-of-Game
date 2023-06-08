@@ -235,7 +235,7 @@ export default {
         // 从接口取出bots数据
         const refresh_bots = () => {
             $.ajax({
-                url: "http://127.0.0.1:3001/user/bot/getlist/",
+                url: "http://127.0.0.1:3000/user/bot/getlist/",
                 type: "get",
                 headers: {
                     Authorization: "Bearer " + store.state.user.token,
@@ -256,7 +256,7 @@ export default {
         const add_bot = () => {
             botaddmsg.error_message = "";
             $.ajax({
-                url: "http://127.0.0.1:3001/user/bot/add/",
+                url: "http://127.0.0.1:3000/user/bot/add/",
                 type: "POST",
                 data:{
                     title: botaddmsg.title,
@@ -284,7 +284,7 @@ export default {
         // 删除bot
         const remove_bot = (bot) =>{
             $.ajax({
-                url: "http://127.0.0.1:3001/user/bot/remove/",
+                url: "http://127.0.0.1:3000/user/bot/remove/",
                 type: "POST",
                 data:{
                     bot_id: bot.id,
@@ -306,7 +306,7 @@ export default {
         const update_bot = (bot) => {
             bot.error_message = "";
             $.ajax({
-                url: "http://127.0.0.1:3001/user/bot/update/",
+                url: "http://127.0.0.1:3000/user/bot/update/",
                 type: "POST",
                 data:{
                     bot_id: bot.id,

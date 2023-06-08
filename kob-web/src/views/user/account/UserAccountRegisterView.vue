@@ -45,7 +45,7 @@ export default{
         // register函数不会改变，用get
         const register = ()=>{
             $.ajax({
-                url:"http://127.0.0.1:3001/user/account/register/",
+                url:"http://127.0.0.1:3000/user/account/register/",
                 type:"post",
                 data:{// 获取组件中的数据并post
                     username: username.value,

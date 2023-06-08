@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class RegisterServiceImpl implements RegisterService {
@@ -69,10 +67,15 @@ public class RegisterServiceImpl implements RegisterService {
             map.put("error_message", "用户名已存在");
             return map;
         }
+        String[] photoItems = {"https://marketplace.canva.cn/9SPE4/MAEn_f9SPE4/1/s2/canva-geometric-shapes-in-different-dimension-MAEn_f9SPE4.jpg",
+                            "https://marketplace.canva.cn/9SPE4/MAEn_f9SPE4/1/s2/canva-geometric-shapes-in-different-dimension-MAEn_f9SPE4.jpg",
+                            "https://marketplace.canva.cn/9SPE4/MAEn_f9SPE4/1/s2/canva-geometric-shapes-in-different-dimension-MAEn_f9SPE4.jpg",
+                            "https://marketplace.canva.cn/9SPE4/MAEn_f9SPE4/1/s2/canva-geometric-shapes-in-different-dimension-MAEn_f9SPE4.jpg"};
 
+        Random rand = new Random();
         // 最后，如果没问题则将密码加密。存到数据库中
         String encodedPassword = passwordEncoder.encode(password);
-        String photo = "https://cdn.acwing.com/media/user/profile/photo/1_lg_844c66b332.jpg";
+        String photo = photoItems[rand.nextInt(photoItems.length)];;
         // id自增，设置为null即可
         User user = new User(null, username, encodedPassword, photo,null);
         userMapper.insert(user);

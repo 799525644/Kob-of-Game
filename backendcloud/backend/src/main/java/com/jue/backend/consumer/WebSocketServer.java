@@ -48,8 +48,8 @@ public class WebSocketServer {
     public static BotMapper botMapper;
     public Game game = null;
     //TODO 把下面的URL写到配置文件中去
-    private final static String addPlayerUrl = "http://127.0.0.1:4001/player/add/";
-    private final static String removePlayerUrl = "http://127.0.0.1:4001/player/remove/";
+    private final static String addPlayerUrl = "http://127.0.0.1:3001/player/add/";
+    private final static String removePlayerUrl = "http://127.0.0.1:3001/player/remove/";
     public static RestTemplate restTemplate; // 用于两个进程之间通，外面也需要借Websocket打restTemplate，故用public
     @Autowired
     public void setUserMapper(UserMapper userMapper) {

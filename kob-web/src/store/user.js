@@ -40,7 +40,7 @@ export default{
         login(context, data){
             // context为上下文，data为组件调用参数
             $.ajax({
-                url:"http://127.0.0.1:3001/user/account/token/",
+                url:"http://127.0.0.1:3000/user/account/token/",
                 type:"post",// type处大小写任意
                 data:{
                   username: data.username,
@@ -66,7 +66,7 @@ export default{
         // getinfo：获取当前用户的信息，header带token，接口/user/account/info/
         getinfo(context, data){
             $.ajax({
-                url:"http://127.0.0.1:3001/user/account/info/",
+                url:"http://127.0.0.1:3000/user/account/info/",
                 type:"get",
                 headers:{
                     Authorization: "Bearer " + context.state.token, // 授权

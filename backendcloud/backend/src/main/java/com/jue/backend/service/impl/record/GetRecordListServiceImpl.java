@@ -29,7 +29,6 @@ public class GetRecordListServiceImpl implements GetRecordListService {
     @Autowired
     private UserMapper userMapper;
 
-
     @Override
     public JSONObject getList(Integer page) {
         System.out.println("getList func:");

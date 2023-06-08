@@ -87,7 +87,7 @@ export default{
         const pull_page = page => {
             current_page = page;
             $.ajax({
-                url: "http://127.0.0.1:3001/record/getlist/",
+                url: "http://127.0.0.1:3000/record/getlist/",
                 data: {
                     page,
                 },
@@ -118,7 +118,7 @@ export default{
             }
         }
 
-        
+
         // 字符串转2维
         const stringTo2D = map => {
             let g = [];
