@@ -20,7 +20,7 @@ public class GetRecordListController {
     @Autowired
     private GetRecordListService getRecordListService;
 
-    @GetMapping("/record/getlist/")
+    @GetMapping("/api/record/getlist/")
     JSONObject getList(@RequestParam Map<String,String> data){
         System.out.println("controller URL: /record/getlist/ ");
         Integer page = Integer.parseInt(data.get("page"));

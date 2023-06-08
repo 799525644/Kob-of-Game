@@ -115,7 +115,6 @@ export class Snake extends AcGameObject {
     render() {
         const L = this.gamemap.L;
         const ctx = this.gamemap.ctx;
-
         ctx.fillStyle = this.color;
         // 死亡形态：变白
         if (this.status === "die") {

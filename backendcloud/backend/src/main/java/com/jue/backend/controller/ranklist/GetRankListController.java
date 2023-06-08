@@ -20,7 +20,7 @@ public class GetRankListController {
     @Autowired
     private GetRanklistService getRanklistService;
 
-    @GetMapping(("/ranklist/getlist/"))
+    @GetMapping(("/api/ranklist/getlist/"))
     public JSONObject getList(@RequestParam Map<String, String> data) {
         System.out.println("controller URL: /ranklist/getlist/ ");
         Integer page = Integer.parseInt(data.get("page"));

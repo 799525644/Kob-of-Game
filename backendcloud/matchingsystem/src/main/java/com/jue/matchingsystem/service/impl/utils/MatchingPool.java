@@ -111,7 +111,7 @@ public class MatchingPool extends Thread{
      */
     protected void matchPlayers() {
         // 可以写一个防抖函数
-        System.out.println("match players：" + players.toString()); // 由于线程每s执行一次匹配
+//        System.out.println("match players：" + players.toString()); // 由于线程每s执行一次匹配
         //TODO 存储匹配成功的两名玩家（可以优化吧）
         boolean[] used = new boolean[players.size()];
         for (int i = 0; i < players.size(); i++) {

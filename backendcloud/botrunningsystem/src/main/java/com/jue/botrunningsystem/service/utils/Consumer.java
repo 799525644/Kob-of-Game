@@ -8,7 +8,11 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * @className: com.jue.botrunningsystem.service.utils.Consumer.java
@@ -43,7 +47,7 @@ public class Consumer extends Thread{
     // 在code中的Bot类名后增加uid
     private String addUid(String code, String uid){
         // 匹配implements com.jue.botrunningsystem.utils.BotInterface后，
-        int k = code.indexOf(" implements com.jue.botrunningsystem.utils.BotInterface");
+        int k = code.indexOf(" implements java.util.function.Supplier<Integer>");
         return code.substring(0,k) + uid + code.substring(k);
     }
 
@@ -53,15 +57,24 @@ public class Consumer extends Thread{
         UUID uuid = UUID.randomUUID();
         String uid = uuid.toString().substring(0,8);
 
+
         // Reflect是joor 用来动态编译java（没有用docker因此需要用uid保证不同）
-        BotInterface botInterface = Reflect.compile(
+        // BotInterface 改为 Supplier<Integer> java自带的函数借口
+        Supplier<Integer> botInterface = Reflect.compile(
                 "com.jue.botrunningsystem.utils.Bot" + uid,
                 addUid(bot.getBotCode(),uid)
         ).create().get();
 
-        Integer direction = botInterface.nextMove(bot.getInput());
-        System.out.println("ok:move-direction: id-"+bot.getUserId() + " dir-" + direction);
+        File file = new File("input.txt");
+        try(PrintWriter fout = new PrintWriter(file)){
+            fout.println(bot.getInput());
+            fout.flush();
+        }catch (FileNotFoundException e){
+            throw new RuntimeException(e);
+        }
 
+        Integer direction = botInterface.get();
+        System.out.println("ok:move-direction: id-"+bot.getUserId() + " dir-" + direction);
         MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
         data.add("user_id",bot.getUserId().toString());
         data.add("direction",direction.toString());
